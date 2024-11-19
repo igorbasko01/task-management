@@ -1,2 +1,4 @@
 click
 pyyaml
+python-frontmatter
+setuptools
