@@ -7,6 +7,15 @@ class TaskHistory:
     timestamp: datetime
     action: str
 
+    @classmethod
+    def from_string(cls, history_entry: str):
+        timestamp_str, action = history_entry.split(" - ")
+        timestamp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
+        return cls(timestamp=timestamp, action=action)
+
+    def to_string(self):
+        return f"{self.timestamp.strftime("%Y-%m-%d %H:%M:%S")} - {self.action}"
+
 
 @dataclass
 class TaskPriority:
