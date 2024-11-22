@@ -3,3 +3,4 @@ venv
 .tasks
 *.egg-info
 build
+**/__pycache__/**
