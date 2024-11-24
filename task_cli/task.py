@@ -60,15 +60,15 @@ category: {category}
 owner: {owner}
 board: {board}
 ---
-            
+
 ## Description
 {description}
-            
+
 ## Notes
 {notes}
-            
+
 ## History
-{created} - Created
+{history}
 """
 
     def __init__(self, 
@@ -123,6 +123,20 @@ board: {board}
             notes=notes,
             history=history
         )
+    
+    def to_string(self):
+        history = "\n".join([entry.to_string() for entry in self.history])
+        return self._task_template.format(
+            task_id=self.task_id,
+            title=self.title,
+            description=self.description,
+            priority=self.priority.name,
+            category=self.category,
+            owner=self.owner,
+            created=self.created.strftime("%Y-%m-%d %H:%M:%S"),
+            board=self.board,
+            notes=self.notes,
+            history=history)
 
     def _validate_category(self, category: str) -> str:
         if category not in self._categories:

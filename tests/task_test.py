@@ -118,3 +118,8 @@ This is a note
     def test_task_from_string_invalid_history(self):
         with self.assertRaises(ValueError):
             Task.from_string(self._invalid_history_task_str)
+
+    def test_task_to_string_valid(self):
+        task = Task.from_string(self._valid_task_str)
+        task_str = task.to_string()
+        self.assertEqual(task_str, self._valid_task_str)
