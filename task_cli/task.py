@@ -33,9 +33,9 @@ class TaskPriority:
 
     @classmethod
     def from_numeric_value(cls, value: int):
-        lowest_priority = sorted(list(cls._value_map.keys()))[-1]
-        # If the value is not in the map, set the priority to the lowest priority
-        name = cls._value_map.get(value, cls._value_map[lowest_priority])
+        if value not in cls._value_map.keys():
+            raise ValueError(f"Invalid priority value: {value}")
+        name = cls._value_map[value]
         return cls(name=name, numeric_value=value)
     
     @classmethod
@@ -143,6 +143,11 @@ board: {board}
         self.board = self._validate_board(to_board)
         timestamp = datetime.now()
         self.history.append(TaskHistory(timestamp=timestamp, action=f"Moved to {to_board}"))
+
+    def update_priority(self, priority: int):
+        self.priority = TaskPriority.from_numeric_value(priority)
+        timestamp = datetime.now()
+        self.history.append(TaskHistory(timestamp=timestamp, action=f"Priority updated to {self.priority.name}"))
 
     def _validate_category(self, category: str) -> str:
         if category not in self._categories:

@@ -17,9 +17,9 @@ class TaskPriorityTests(unittest.TestCase):
         priority = TaskPriority.from_numeric_value(2)
         self.assertEqual(priority.name, "Low")
 
-    def test_priority_from_numeric_value_invalid_set_priority_lowest(self):
-        priority = TaskPriority.from_numeric_value(3)
-        self.assertEqual(priority.name, "Low")
+    def test_priority_from_numeric_value_invalid_raises_exception(self):
+        with self.assertRaises(ValueError):
+            TaskPriority.from_numeric_value(3)
 
 
 class TaskHistoryTests(unittest.TestCase):
@@ -172,10 +172,42 @@ This is a note
             task.move_to_board("Invalid Board")
 
     def test_task_update_priority_to_high(self):
-        self.assertEqual(1, 2)
+        task = Task(1, "Test Task", "This is a test task", 1, "Bug", "Test User")
+        task.update_priority(0)
+        self.assertEqual(task.priority.name, "High")
+
+    def test_task_update_priority_to_high_adds_history(self):
+        task = Task(1, "Test Task", "This is a test task", 1, "Bug", "Test User")
+        task.update_priority(0)
+        self.assertEqual(len(task.history), 2)
+        self.assertEqual(task.history[1].action, "Priority updated to High")
+        self.assertGreater(task.history[1].timestamp, task.created)
 
     def test_task_update_priority_to_medium(self):
-        self.assertEqual(1, 2)
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.update_priority(1)
+        self.assertEqual(task.priority.name, "Medium")
+
+    def test_task_update_priority_to_medium_adds_history(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.update_priority(1)
+        self.assertEqual(len(task.history), 2)
+        self.assertEqual(task.history[1].action, "Priority updated to Medium")
+        self.assertGreater(task.history[1].timestamp, task.created)
 
     def test_task_update_priority_to_low(self):
-        self.assertEqual(1, 2)
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.update_priority(2)
+        self.assertEqual(task.priority.name, "Low")
+
+    def test_task_update_priority_to_low_adds_history(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.update_priority(2)
+        self.assertEqual(len(task.history), 2)
+        self.assertEqual(task.history[1].action, "Priority updated to Low")
+        self.assertGreater(task.history[1].timestamp, task.created)
+
+    def test_task_update_priority_invalid_priority_raises_exception(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        with self.assertRaises(ValueError):
+            task.update_priority(3)
