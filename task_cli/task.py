@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List
 
 import frontmatter
 
@@ -78,10 +79,10 @@ board: {board}
                  priority: int, 
                  category: str, 
                  owner: str,
-                 created: datetime, 
+                 created: datetime = None, 
                  board: str = "Backlog",
                  notes: str = "",
-                 history: TaskHistory = []):
+                 history: List[TaskHistory] = []):
         self.task_id: int = task_id
         self.title: str = title
         self.created: datetime = created or datetime.now()
@@ -91,7 +92,7 @@ board: {board}
         self.board: str = self._validate_board(board)
         self.description: str = description
         self.notes: str = notes
-        self.history: TaskHistory = history
+        self.history: List[TaskHistory] = history or [TaskHistory(timestamp=self.created, action="Created")]
 
     @classmethod
     def from_string(cls, task_str: str):
@@ -137,6 +138,11 @@ board: {board}
             board=self.board,
             notes=self.notes,
             history=history)
+    
+    def move_to_board(self, to_board: str):
+        self.board = self._validate_board(to_board)
+        timestamp = datetime.now()
+        self.history.append(TaskHistory(timestamp=timestamp, action=f"Moved to {to_board}"))
 
     def _validate_category(self, category: str) -> str:
         if category not in self._categories:

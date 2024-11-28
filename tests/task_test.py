@@ -123,3 +123,59 @@ This is a note
         task = Task.from_string(self._valid_task_str)
         task_str = task.to_string()
         self.assertEqual(task_str, self._valid_task_str)
+    
+    def test_task_created_adds_history(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        self.assertEqual(len(task.history), 1)
+        self.assertEqual(task.history[0], TaskHistory(timestamp=task.created, action="Created"))
+
+    def test_task_move_to_backlog_board(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")
+        task.move_to_board("Backlog")
+        self.assertEqual(task.board, "Backlog")
+
+    def test_task_move_to_backlog_board_adds_history(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")
+        task.move_to_board("Backlog")
+        self.assertEqual(len(task.history), 2)
+        self.assertEqual(task.history[1].action, "Moved to Backlog")
+        self.assertGreater(task.history[1].timestamp, task.created)
+
+    def test_task_move_to_in_progress_board(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.move_to_board("In Progress")
+        self.assertEqual(task.board, "In Progress")
+
+    def test_task_move_to_in_progress_board_adds_history(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.move_to_board("In Progress")
+        self.assertEqual(len(task.history), 2)
+        self.assertEqual(task.history[1].action, "Moved to In Progress")
+        self.assertGreater(task.history[1].timestamp, task.created)
+
+
+    def test_task_move_to_done_board(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")
+        task.move_to_board("Done")
+        self.assertEqual(task.board, "Done")
+
+    def test_task_move_to_done_board_adds_history(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")
+        task.move_to_board("Done")
+        self.assertEqual(len(task.history), 2)
+        self.assertEqual(task.history[1].action, "Moved to Done")
+        self.assertGreater(task.history[1].timestamp, task.created)
+
+    def test_task_move_to_invalid_board_raises_exception(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        with self.assertRaises(ValueError):
+            task.move_to_board("Invalid Board")
+
+    def test_task_update_priority_to_high(self):
+        self.assertEqual(1, 2)
+
+    def test_task_update_priority_to_medium(self):
+        self.assertEqual(1, 2)
+
+    def test_task_update_priority_to_low(self):
+        self.assertEqual(1, 2)
