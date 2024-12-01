@@ -4,18 +4,35 @@ from task_cli.task_priority import TaskPriority
 
 
 class TaskPriorityTests(unittest.TestCase):
-    def test_priority_from_numeric_value_0(self):
-        priority = TaskPriority.from_numeric_value(0)
-        self.assertEqual(priority.name, "High")
+    def test_priority_from_numeric_value(self):
+        test_cases = {
+            0: "High",
+            1: "Medium",
+            2: "Low"
+        }
 
-    def test_priority_from_numeric_value_1(self):
-        priority = TaskPriority.from_numeric_value(1)
-        self.assertEqual(priority.name, "Medium")
+        for value, expected_name in test_cases.items():
+            with self.subTest(value=value):
+                priority = TaskPriority.from_numeric_value(value)
+                self.assertEqual(priority.name, expected_name)
+                self.assertEqual(priority.numeric_value, value)
+        
+        with self.subTest(name="Invalid Numeric Priority"):
+            with self.assertRaises(ValueError):
+                TaskPriority.from_numeric_value(3)
 
-    def test_priority_from_numeric_value_2(self):
-        priority = TaskPriority.from_numeric_value(2)
-        self.assertEqual(priority.name, "Low")
+    def test_priority_from_name(self):
+        test_cases = {
+            "High": 0,
+            "Medium": 1,
+            "Low": 2
+        }
 
-    def test_priority_from_numeric_value_invalid_raises_exception(self):
-        with self.assertRaises(ValueError):
-            TaskPriority.from_numeric_value(3)
+        for name, expected_value in test_cases.items():
+            with self.subTest(name=name):
+                priority = TaskPriority.from_name(name)
+                self.assertEqual(priority.numeric_value, expected_value)
+        
+        with self.subTest(name="Invalid Priority"):
+            with self.assertRaises(ValueError):
+                TaskPriority.from_name("Invalid Priority")
