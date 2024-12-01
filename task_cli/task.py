@@ -51,7 +51,7 @@ board: {board}
                  task_id: int, 
                  title: str, 
                  description: str, 
-                 priority: int, 
+                 priority: TaskPriority, 
                  category: str, 
                  owner: str,
                  created: datetime = None, 
@@ -61,7 +61,7 @@ board: {board}
         self.task_id: int = task_id
         self.title: str = title
         self.created: datetime = created or datetime.now()
-        self.priority: TaskPriority = TaskPriority.from_numeric_value(priority)
+        self.priority: TaskPriority = priority
         self.category: str = self._validate_category(category)
         self.owner: str = owner
         self._board: str = self._validate_board(board)
@@ -91,7 +91,7 @@ board: {board}
             task_id=task_id,
             title=task.metadata["title"],
             description=description,
-            priority=priority.numeric_value,
+            priority=priority,
             category=task.metadata["category"],
             created=created,
             owner=task.metadata["owner"],

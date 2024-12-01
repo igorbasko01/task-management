@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from task_cli.task import Task
+from task_cli.task_priority import PriorityLevel, TaskPriority
 
 
 class TaskManager:
@@ -23,7 +24,7 @@ class TaskManager:
             f.seek(0)
             f.write(str(counter + 1))
             f.truncate()
-        task = Task(counter + 1, title, "", 1, category, owner)
+        task = Task(counter + 1, title, "", TaskPriority(PriorityLevel.MEDIUM), category, owner)
         task_file = self.tasks_dir / f"TASK-{task.task_id}.md"
         with task_file.open("w") as f:
             f.write(task.to_string())
