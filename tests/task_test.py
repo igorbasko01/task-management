@@ -104,7 +104,7 @@ This is a note
         self.assertEqual(task.priority.name, "High")
         self.assertEqual(task.category, "Bug")
         self.assertEqual(task.owner, "Test User")
-        self.assertEqual(task.board, "Backlog")
+        self.assertEqual(task._board, "Backlog")
         self.assertEqual(task.description, "This is a test task")
         self.assertEqual(task.notes, "This is a note")
         self.assertEqual(len(task.history), 2)
@@ -132,7 +132,7 @@ This is a note
     def test_task_move_to_backlog_board(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")
         task.move_to_board("Backlog")
-        self.assertEqual(task.board, "Backlog")
+        self.assertEqual(task._board, "Backlog")
 
     def test_task_move_to_backlog_board_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")
@@ -144,7 +144,7 @@ This is a note
     def test_task_move_to_in_progress_board(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
         task.move_to_board("In Progress")
-        self.assertEqual(task.board, "In Progress")
+        self.assertEqual(task._board, "In Progress")
 
     def test_task_move_to_in_progress_board_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
@@ -157,7 +157,7 @@ This is a note
     def test_task_move_to_done_board(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")
         task.move_to_board("Done")
-        self.assertEqual(task.board, "Done")
+        self.assertEqual(task._board, "Done")
 
     def test_task_move_to_done_board_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")

@@ -89,7 +89,7 @@ board: {board}
         self.priority: TaskPriority = TaskPriority.from_numeric_value(priority)
         self.category: str = self._validate_category(category)
         self.owner: str = owner
-        self.board: str = self._validate_board(board)
+        self._board: str = self._validate_board(board)
         self.description: str = description
         self.notes: str = notes
         self.history: List[TaskHistory] = history or [TaskHistory(timestamp=self.created, action="Created")]
@@ -135,12 +135,12 @@ board: {board}
             category=self.category,
             owner=self.owner,
             created=self.created.strftime("%Y-%m-%d %H:%M:%S"),
-            board=self.board,
+            board=self._board,
             notes=self.notes,
             history=history)
     
     def move_to_board(self, to_board: str):
-        self.board = self._validate_board(to_board)
+        self._board = self._validate_board(to_board)
         timestamp = datetime.now()
         self.history.append(TaskHistory(timestamp=timestamp, action=f"Moved to {to_board}"))
 
