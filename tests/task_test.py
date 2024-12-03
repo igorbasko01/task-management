@@ -84,8 +84,8 @@ This is a note
         self.assertEqual(task.task_id, 1)
         self.assertEqual(task.title, "Test Task")
         self.assertEqual(task.created, datetime(2021, 1, 1, 12, 0, 0))
-        self.assertEqual(task.priority.name, "High")
-        self.assertEqual(task.category, "Bug")
+        self.assertEqual(task._priority.name, "High")
+        self.assertEqual(task._category, "Bug")
         self.assertEqual(task.owner, "Test User")
         self.assertEqual(task._board, "Backlog")
         self.assertEqual(task.description, "This is a test task")
@@ -157,7 +157,7 @@ This is a note
     def test_task_update_priority_to_high(self):
         task = Task(1, "Test Task", "This is a test task", 1, "Bug", "Test User")
         task.update_priority(TaskPriority.from_numeric_value(0))
-        self.assertEqual(task.priority.name, "High")
+        self.assertEqual(task._priority.name, "High")
 
     def test_task_update_priority_to_high_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 1, "Bug", "Test User")
@@ -169,7 +169,7 @@ This is a note
     def test_task_update_priority_to_medium(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
         task.update_priority(TaskPriority.from_numeric_value(1))
-        self.assertEqual(task.priority.name, "Medium")
+        self.assertEqual(task._priority.name, "Medium")
 
     def test_task_update_priority_to_medium_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
@@ -181,7 +181,7 @@ This is a note
     def test_task_update_priority_to_low(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
         task.update_priority(TaskPriority.from_numeric_value(2))
-        self.assertEqual(task.priority.name, "Low")
+        self.assertEqual(task._priority.name, "Low")
 
     def test_task_update_priority_to_low_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
@@ -198,7 +198,7 @@ This is a note
     def test_task_update_category_valid(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
         task.update_category("Feature")
-        self.assertEqual(task.category, "Feature")
+        self.assertEqual(task._category, "Feature")
 
     def test_task_update_category_valid_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
@@ -211,3 +211,7 @@ This is a note
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
         with self.assertRaises(ValueError):
             task.update_category("Invalid Category")
+
+    def test_task_str(self):
+        task = Task(1, "Test Task", "This is a test task", TaskPriority.from_numeric_value(0), "Bug", "Test User")
+        self.assertEqual(str(task), "TASK-1: Test Task (High, Bug, Backlog)")

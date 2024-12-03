@@ -61,8 +61,8 @@ board: {board}
         self.task_id: int = task_id
         self.title: str = title
         self.created: datetime = created or datetime.now()
-        self.priority: TaskPriority = priority
-        self.category: str = self._validate_category(category)
+        self._priority: TaskPriority = priority
+        self._category: str = self._validate_category(category)
         self.owner: str = owner
         self._board: str = self._validate_board(board)
         self.description: str = description
@@ -106,13 +106,25 @@ board: {board}
             task_id=self.task_id,
             title=self.title,
             description=self.description,
-            priority=self.priority.name,
-            category=self.category,
+            priority=self._priority.name,
+            category=self._category,
             owner=self.owner,
             created=self.created.strftime("%Y-%m-%d %H:%M:%S"),
             board=self._board,
             notes=self.notes,
             history=history)
+    
+    @property
+    def board(self):
+        return self._board
+    
+    @property
+    def priority(self):
+        return self._priority
+    
+    @property
+    def category(self):
+        return self._category
     
     def move_to_board(self, to_board: str):
         self._board = self._validate_board(to_board)
@@ -120,14 +132,14 @@ board: {board}
         self.history.append(TaskHistory(timestamp=timestamp, action=f"Moved to {to_board}"))
 
     def update_priority(self, priority: TaskPriority):
-        self.priority = priority
+        self._priority = priority
         timestamp = datetime.now()
-        self.history.append(TaskHistory(timestamp=timestamp, action=f"Priority updated to {self.priority.name}"))
+        self.history.append(TaskHistory(timestamp=timestamp, action=f"Priority updated to {self._priority.name}"))
 
     def update_category(self, category: str):
-        self.category = self._validate_category(category)
+        self._category = self._validate_category(category)
         timestamp = datetime.now()
-        self.history.append(TaskHistory(timestamp=timestamp, action=f"Category updated to {self.category}"))
+        self.history.append(TaskHistory(timestamp=timestamp, action=f"Category updated to {self._category}"))
 
     def _validate_category(self, category: str) -> str:
         if category not in self._categories:
@@ -138,3 +150,6 @@ board: {board}
         if board not in self._boards:
             raise ValueError(f"Invalid board: {board}, allowed boards: {self._boards}")
         return board
+    
+    def __str__(self):
+        return f"TASK-{self.task_id}: {self.title} ({self._priority.name}, {self._category}, {self._board})"

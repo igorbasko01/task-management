@@ -193,3 +193,78 @@ class TaskManagerTests(unittest.TestCase):
             task_manager.create_task("Test Task", "Feature", "Test User")
             with self.assertRaises(ValueError):
                 task_manager.update_task_category(1, "Invalid Category")
+
+    def test_list_tasks_by_board(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            task_manager.move_task(1, "In Progress")
+            tasks = task_manager.list_tasks(board="In Progress")
+            self.assertEqual(len(tasks), 1)
+            self.assertEqual(tasks[0].title, "Test Task")
+
+    def test_list_tasks_by_board_should_return_empty_list_if_no_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            tasks = task_manager.list_tasks(board="In Progress")
+            self.assertEqual(len(tasks), 0)
+
+    def test_list_tasks_by_priority(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            task_manager.update_task_priority(1, "High")
+            tasks = task_manager.list_tasks(priority="High")
+            self.assertEqual(len(tasks), 1)
+            self.assertEqual(tasks[0].title, "Test Task")
+
+    def test_list_tasks_by_priority_should_return_empty_list_if_no_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            tasks = task_manager.list_tasks(priority="High")
+            self.assertEqual(len(tasks), 0)
+
+    def test_list_tasks_by_priority_should_return_multiple_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            task_manager.update_task_priority(1, "High")
+            task_manager.update_task_priority(2, "High")
+            tasks = task_manager.list_tasks(priority="High")
+            self.assertEqual(len(tasks), 2)
+            self.assertCountEqual([task.title for task in tasks], ["Test Task", "Test Task 2"])
+
+    def test_list_tasks_by_category(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Bug", "Test User")
+            tasks = task_manager.list_tasks(category="Feature")
+            self.assertEqual(len(tasks), 1)
+            self.assertEqual(tasks[0].title, "Test Task")
+
+    def test_list_tasks_by_category_should_return_empty_list_if_no_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            tasks = task_manager.list_tasks(category="Feature")
+            self.assertEqual(len(tasks), 0)
+
+    def test_list_tasks_by_category_should_return_multiple_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            tasks = task_manager.list_tasks(category="Feature")
+            self.assertEqual(len(tasks), 2)
+            self.assertCountEqual([task.title for task in tasks], ["Test Task", "Test Task 2"])

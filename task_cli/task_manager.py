@@ -61,3 +61,17 @@ class TaskManager:
         task.update_category(category)
         with task_file.open("w") as f:
             f.write(task.to_string())
+
+    def list_tasks(self, board: str = None, category: str = None, priority: str = None):
+        tasks = []
+        for task_file in self.tasks_dir.iterdir():
+            task_content = task_file.read_text()
+            task = Task.from_string(task_content)
+            if board and task.board != board:
+                continue
+            if category and task._category != category:
+                continue
+            if priority and task._priority.name != priority:
+                continue
+            tasks.append(task)
+        return tasks
