@@ -18,14 +18,12 @@ def init():
 
 @cli.command()
 @click.option("--title", required=True, help="Task title")
-@click.option("--description", required=True, help="Task description")
-@click.option("--priority", default="Medium", help="Task priority")
 @click.option("--category", default="Feature", help="Task category")
 @click.option("--owner", default="", help="Task owner")
-def create(title, description, priority, category, owner):
+def create(title, category, owner):
     """Create a new task"""
     manager = TaskManager()
-    task_id = manager.create_task(title, description, priority, category, owner)
+    task_id = manager.create_task(title, category, owner)
     click.echo(f"✨ Task created: {task_id}")
 
 
@@ -60,9 +58,9 @@ def update_category(task_id, category):
 
 
 @cli.command()
-@click.option("--board", default="Backlog", help="Board name")
-@click.option("--priority", default="Medium", help="Priority level")
-@click.option("--category", default="Feature", help="Category name")
+@click.option("--board", default=None, help="Board name")
+@click.option("--priority", default=None, help="Priority level")
+@click.option("--category", default=None, help="Category name")
 def list_tasks(board, priority, category):
     """List tasks based on board, priority, and category"""
     manager = TaskManager()

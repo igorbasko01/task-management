@@ -1,6 +1,5 @@
 venv
 .idea
-.tasks
 *.egg-info
 build
 **/__pycache__/**

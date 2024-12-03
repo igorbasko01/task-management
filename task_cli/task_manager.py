@@ -18,16 +18,18 @@ class TaskManager:
         with self.task_counter_file.open("w") as f:
             f.write("0")
 
-    def create_task(self, title: str, category: str, owner: str):
+    def create_task(self, title: str, category: str, owner: str) -> int:
         with self.task_counter_file.open("r+") as f:
             counter = int(f.read())
             f.seek(0)
             f.write(str(counter + 1))
             f.truncate()
-        task = Task(counter + 1, title, "", TaskPriority(PriorityLevel.MEDIUM), category, owner)
+        task_id = counter + 1
+        task = Task(task_id, title, "", TaskPriority(PriorityLevel.MEDIUM), category, owner)
         task_file = self.tasks_dir / f"TASK-{task.task_id}.md"
         with task_file.open("w") as f:
             f.write(task.to_string())
+        return task_id
 
     def move_task(self, task_id: int, board: str):
         task_file = self.tasks_dir / f"TASK-{task_id}.md"

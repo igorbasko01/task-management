@@ -194,6 +194,16 @@ class TaskManagerTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 task_manager.update_task_category(1, "Invalid Category")
 
+    def test_list_tasks_should_return_all_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            tasks = task_manager.list_tasks()
+            self.assertEqual(len(tasks), 2)
+            self.assertCountEqual([task.title for task in tasks], ["Test Task", "Test Task 2"])
+    
     def test_list_tasks_by_board(self):
         with tempfile.TemporaryDirectory() as tmp:
             task_manager = TaskManager(tmp)
