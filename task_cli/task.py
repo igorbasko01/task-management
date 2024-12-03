@@ -119,8 +119,8 @@ board: {board}
         timestamp = datetime.now()
         self.history.append(TaskHistory(timestamp=timestamp, action=f"Moved to {to_board}"))
 
-    def update_priority(self, priority: int):
-        self.priority = TaskPriority.from_numeric_value(priority)
+    def update_priority(self, priority: TaskPriority):
+        self.priority = priority
         timestamp = datetime.now()
         self.history.append(TaskHistory(timestamp=timestamp, action=f"Priority updated to {self.priority.name}"))
 

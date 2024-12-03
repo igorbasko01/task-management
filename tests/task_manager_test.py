@@ -89,3 +89,55 @@ class TaskManagerTests(unittest.TestCase):
             task_manager.create_task("Test Task", "Feature", "Test User")
             with self.assertRaises(ValueError):
                 task_manager.move_task(1, "Invalid Board")
+
+    def test_update_task_priority(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.update_task_priority(1, "High")
+            task_file = task_manager.tasks_dir / "TASK-1.md"
+            with task_file.open() as f:
+                content = f.read()
+                self.assertIn("priority: High", content)
+
+    def test_update_task_priority_should_not_change_other_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.update_task_priority(1, "High")
+            task_file = task_manager.tasks_dir / "TASK-1.md"
+            with task_file.open() as f:
+                content = f.read()
+                self.assertIn("title: Test Task", content)
+                self.assertIn("category: Feature", content)
+                self.assertIn("owner: Test User", content)
+                self.assertIn("board: Backlog", content)
+
+    def test_update_task_priority_should_not_change_other_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            task_manager.update_task_priority(1, "High")
+            task_file = task_manager.tasks_dir / "TASK-2.md"
+            with task_file.open() as f:
+                content = f.read()
+                self.assertIn("priority: Medium", content)
+
+    def test_update_task_priority_should_raise_error_if_task_doesnt_exist(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            with self.assertRaises(ValueError):
+                task_manager.update_task_priority(1, "High")
+
+    def test_update_task_priority_should_raise_error_if_priority_is_invalid(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            with self.assertRaises(ValueError):
+                task_manager.update_task_priority(1, "Invalid Priority")

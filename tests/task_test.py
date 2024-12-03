@@ -2,6 +2,7 @@ from datetime import datetime
 import unittest
 
 from task_cli.task import Task, TaskHistory
+from task_cli.task_priority import TaskPriority
 
 
 class TaskHistoryTests(unittest.TestCase):
@@ -155,36 +156,36 @@ This is a note
 
     def test_task_update_priority_to_high(self):
         task = Task(1, "Test Task", "This is a test task", 1, "Bug", "Test User")
-        task.update_priority(0)
+        task.update_priority(TaskPriority.from_numeric_value(0))
         self.assertEqual(task.priority.name, "High")
 
     def test_task_update_priority_to_high_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 1, "Bug", "Test User")
-        task.update_priority(0)
+        task.update_priority(TaskPriority.from_numeric_value(0))
         self.assertEqual(len(task.history), 2)
         self.assertEqual(task.history[1].action, "Priority updated to High")
         self.assertGreater(task.history[1].timestamp, task.created)
 
     def test_task_update_priority_to_medium(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
-        task.update_priority(1)
+        task.update_priority(TaskPriority.from_numeric_value(1))
         self.assertEqual(task.priority.name, "Medium")
 
     def test_task_update_priority_to_medium_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
-        task.update_priority(1)
+        task.update_priority(TaskPriority.from_numeric_value(1))
         self.assertEqual(len(task.history), 2)
         self.assertEqual(task.history[1].action, "Priority updated to Medium")
         self.assertGreater(task.history[1].timestamp, task.created)
 
     def test_task_update_priority_to_low(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
-        task.update_priority(2)
+        task.update_priority(TaskPriority.from_numeric_value(2))
         self.assertEqual(task.priority.name, "Low")
 
     def test_task_update_priority_to_low_adds_history(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
-        task.update_priority(2)
+        task.update_priority(TaskPriority.from_numeric_value(2))
         self.assertEqual(len(task.history), 2)
         self.assertEqual(task.history[1].action, "Priority updated to Low")
         self.assertGreater(task.history[1].timestamp, task.created)
@@ -192,4 +193,4 @@ This is a note
     def test_task_update_priority_invalid_priority_raises_exception(self):
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
         with self.assertRaises(ValueError):
-            task.update_priority(3)
+            task.update_priority(TaskPriority.from_numeric_value(3))
