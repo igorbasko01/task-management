@@ -124,6 +124,11 @@ board: {board}
         timestamp = datetime.now()
         self.history.append(TaskHistory(timestamp=timestamp, action=f"Priority updated to {self.priority.name}"))
 
+    def update_category(self, category: str):
+        self.category = self._validate_category(category)
+        timestamp = datetime.now()
+        self.history.append(TaskHistory(timestamp=timestamp, action=f"Category updated to {self.category}"))
+
     def _validate_category(self, category: str) -> str:
         if category not in self._categories:
             raise ValueError(f"Invalid category: {category}, allowed categories: {self._categories}")

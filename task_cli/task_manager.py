@@ -50,3 +50,14 @@ class TaskManager:
         task.update_priority(TaskPriority.from_name(priority))
         with task_file.open("w") as f:
             f.write(task.to_string())
+
+    def update_task_category(self, task_id: int, category: str):
+        task_file = self.tasks_dir / f"TASK-{task_id}.md"
+        try:
+            task_content = task_file.read_text()
+        except FileNotFoundError:
+            raise ValueError(f"Task {task_id} not found")
+        task = Task.from_string(task_content)
+        task.update_category(category)
+        with task_file.open("w") as f:
+            f.write(task.to_string())

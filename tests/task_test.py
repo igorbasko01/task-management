@@ -194,3 +194,20 @@ This is a note
         task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
         with self.assertRaises(ValueError):
             task.update_priority(TaskPriority.from_numeric_value(3))
+
+    def test_task_update_category_valid(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.update_category("Feature")
+        self.assertEqual(task.category, "Feature")
+
+    def test_task_update_category_valid_adds_history(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.update_category("Feature")
+        self.assertEqual(len(task.history), 2)
+        self.assertEqual(task.history[1].action, "Category updated to Feature")
+        self.assertGreater(task.history[1].timestamp, task.created)
+
+    def test_task_update_category_invalid_category_raises_exception(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        with self.assertRaises(ValueError):
+            task.update_category("Invalid Category")
