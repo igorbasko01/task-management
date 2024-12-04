@@ -17,7 +17,7 @@ def init():
 
 
 @cli.command()
-@click.option("--title", required=True, help="Task title")
+@click.argument("title")
 @click.option("--category", default="Feature", help="Task category")
 @click.option("--owner", default="", help="Task owner")
 def create(title, category, owner):
