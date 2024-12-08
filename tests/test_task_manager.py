@@ -278,3 +278,14 @@ class TaskManagerTests(unittest.TestCase):
             tasks = task_manager.list_tasks(category="Feature")
             self.assertEqual(len(tasks), 2)
             self.assertCountEqual([task.title for task in tasks], ["Test Task", "Test Task 2"])
+
+    def test_list_tasks_by_board_acronym(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            task_manager.move_task(1, "In Progress")
+            tasks = task_manager.list_tasks(board="ip")
+            self.assertEqual(len(tasks), 1)
+            self.assertEqual(tasks[0].title, "Test Task")

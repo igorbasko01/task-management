@@ -1,6 +1,7 @@
 from datetime import datetime
 import unittest
 
+from task_cli.board import Board
 from task_cli.task import Task, TaskHistory
 from task_cli.task_priority import TaskPriority
 
@@ -87,7 +88,7 @@ This is a note
         self.assertEqual(task._priority.name, "High")
         self.assertEqual(task._category, "Bug")
         self.assertEqual(task.owner, "Test User")
-        self.assertEqual(task._board, "Backlog")
+        self.assertEqual(task._board, Board("Backlog", "BL"))
         self.assertEqual(task.description, "This is a test task")
         self.assertEqual(task.notes, "This is a note")
         self.assertEqual(len(task.history), 2)
@@ -215,3 +216,28 @@ This is a note
     def test_task_str(self):
         task = Task(1, "Test Task", "This is a test task", TaskPriority.from_numeric_value(0), "Bug", "Test User")
         self.assertEqual(str(task), "TASK-1: Test Task (High, Bug, Backlog)")
+
+    def test_task_move_to_board_in_progress_through_acronym(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.move_to_board("ip")
+        self.assertEqual(task._board, "In Progress")
+
+    def test_task_move_to_board_done_through_acronym(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.move_to_board("dn")
+        self.assertEqual(task._board, "Done")
+
+    def test_task_move_to_board_backlog_through_acronym(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User", board="In Progress")
+        task.move_to_board("bl")
+        self.assertEqual(task._board, "Backlog")
+
+    def test_task_move_to_board_invalid_acronym_raises_exception(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        with self.assertRaises(ValueError):
+            task.move_to_board("invalid")
+
+    def test_task_move_to_board_acronym_history_uses_name(self):
+        task = Task(1, "Test Task", "This is a test task", 0, "Bug", "Test User")
+        task.move_to_board("ip")
+        self.assertEqual(task.history[1].action, "Moved to In Progress")

@@ -4,6 +4,7 @@ from typing import List
 
 import frontmatter
 
+from task_cli.board import Board
 from task_cli.task_priority import TaskPriority
 
 
@@ -20,12 +21,17 @@ class TaskHistory:
 
     def to_string(self):
         return f"{self.timestamp.strftime("%Y-%m-%d %H:%M:%S")} - {self.action}"
-
+    
 
 class Task:
 
     _categories = ["Bug", "Feature", "Documentation", "Maintenance", "UI/UX", "Security"]
-    _boards = ["Backlog", "In Progress", "Done"]
+    
+    _boards = [
+        Board("Backlog", "BL"), 
+        Board("In Progress", "IP"), 
+        Board("Done", "DN")
+    ]
 
     _task_template = """---
 id: TASK-{task_id}
@@ -64,7 +70,7 @@ board: {board}
         self._priority: TaskPriority = priority
         self._category: str = self._validate_category(category)
         self.owner: str = owner
-        self._board: str = self._validate_board(board)
+        self._board: Board = self._validate_board(board)
         self.description: str = description
         self.notes: str = notes
         self.history: List[TaskHistory] = history or [TaskHistory(timestamp=self.created, action="Created")]
@@ -110,7 +116,7 @@ board: {board}
             category=self._category,
             owner=self.owner,
             created=self.created.strftime("%Y-%m-%d %H:%M:%S"),
-            board=self._board,
+            board=self._board.name,
             notes=self.notes,
             history=history)
     
@@ -129,7 +135,7 @@ board: {board}
     def move_to_board(self, to_board: str):
         self._board = self._validate_board(to_board)
         timestamp = datetime.now()
-        self.history.append(TaskHistory(timestamp=timestamp, action=f"Moved to {to_board}"))
+        self.history.append(TaskHistory(timestamp=timestamp, action=f"Moved to {self._board.name}"))
 
     def update_priority(self, priority: TaskPriority):
         self._priority = priority
@@ -146,10 +152,11 @@ board: {board}
             raise ValueError(f"Invalid category: {category}, allowed categories: {self._categories}")
         return category
     
-    def _validate_board(self, board: str) -> str:
-        if board not in self._boards:
-            raise ValueError(f"Invalid board: {board}, allowed boards: {self._boards}")
-        return board
+    def _validate_board(self, board: str) -> Board:
+        for _board in self._boards:
+            if _board == board:
+                return _board
+        raise ValueError(f"Invalid board: {board}, allowed boards: {self._boards}")
     
     def __str__(self):
-        return f"TASK-{self.task_id}: {self.title} ({self._priority.name}, {self._category}, {self._board})"
+        return f"TASK-{self.task_id}: {self.title} ({self._priority.name}, {self._category}, {self._board.name})"
