@@ -289,3 +289,13 @@ class TaskManagerTests(unittest.TestCase):
             tasks = task_manager.list_tasks(board="ip")
             self.assertEqual(len(tasks), 1)
             self.assertEqual(tasks[0].title, "Test Task")
+
+    def test_move_to_board_returns_the_task(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task = task_manager.move_task(1, "In Progress")
+            self.assertEqual(task.task_id, 1)
+            self.assertEqual(task.title, "Test Task")
+            self.assertEqual(task.board, "In Progress")

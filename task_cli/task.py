@@ -86,7 +86,7 @@ board: {board}
         notes = task.content.split("## Notes")[1].split("## History")[0].strip()
         # extract history
         history = task.content.split("## History")[1].strip()
-        history = [TaskHistory.from_string(entry) for entry in history.split("\n")]
+        history = [TaskHistory.from_string(entry) for entry in history.split("\n\n")]
         # extract task id
         task_id = int(task.metadata["id"].split("-")[1])
         # extract priority
@@ -107,7 +107,7 @@ board: {board}
         )
     
     def to_string(self):
-        history = "\n".join([entry.to_string() for entry in self.history])
+        history = "\n\n".join([entry.to_string() for entry in self.history])
         return self._task_template.format(
             task_id=self.task_id,
             title=self.title,

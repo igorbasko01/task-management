@@ -35,6 +35,7 @@ This is a note
 
 ## History
 2021-01-01 12:00:00 - Created
+
 2021-01-01 12:00:01 - Moved to In Progress
 """
 

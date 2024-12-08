@@ -31,7 +31,7 @@ class TaskManager:
             f.write(task.to_string())
         return task_id
 
-    def move_task(self, task_id: int, board: str):
+    def move_task(self, task_id: int, board: str) -> Task:
         task_file = self.tasks_dir / f"TASK-{task_id}.md"
         try:
             task_content = task_file.read_text()
@@ -41,6 +41,7 @@ class TaskManager:
         task.move_to_board(board)
         with task_file.open("w") as f:
             f.write(task.to_string())
+        return task
 
     def update_task_priority(self, task_id: int, priority: str):
         task_file = self.tasks_dir / f"TASK-{task_id}.md"

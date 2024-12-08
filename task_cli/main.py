@@ -33,8 +33,8 @@ def create(title, category, owner):
 def move(task_id, to_board):
     """Move a task to a different board"""
     manager = TaskManager()
-    manager.move_task(task_id, to_board)
-    click.echo(f"➡️ Moved task {task_id} to {to_board}")
+    task = manager.move_task(task_id, to_board)
+    click.echo(f"➡️ Moved task {task.task_id} - {task.title} to {task.board.name}")
 
 
 @cli.command()
