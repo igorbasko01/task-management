@@ -41,22 +41,17 @@ def move(task_id, to_board):
 
 @cli.command()
 @click.argument("task_id")
-@click.argument("priority")
-def update_priority(task_id, priority):
+@click.option("--priority", default=None, help="Priority level")
+@click.option("--category", default=None, help="Category name")
+def update(task_id, priority, category):
     """Update task priority"""
     manager = TaskManager()
-    manager.update_task_priority(task_id, priority)
-    click.echo(f"🔝 Updated priority for task {task_id}")
-
-
-@cli.command()
-@click.argument("task_id")
-@click.argument("category")
-def update_category(task_id, category):
-    """Update task category"""
-    manager = TaskManager()
-    manager.update_task_category(task_id, category)
-    click.echo(f"📦 Updated category for task {task_id}")
+    if priority:
+        manager.update_task_priority(task_id, priority)
+        click.echo(f"🔝 Updated priority for task {task_id}")
+    if category:
+        manager.update_task_category(task_id, category)
+        click.echo(f"🏷 Updated category for task {task_id}")
 
 
 @cli.command()
