@@ -4,8 +4,8 @@ title: task id should include the TASK- prefix
 created: 2024-12-03 22:45:11
 priority: Medium
 category: Feature
-owner: 
-board: Backlog
+owner: None
+board: Done
 ---
 
 ## Description
@@ -18,3 +18,11 @@ so the task id could be printed nicely.
 
 ## History
 2024-12-03 22:45:11 - Created
+
+2024-12-09 07:22:02 - Moved to In Progress
+
+2024-12-09 07:22:31 - Moved to Done
+
+2024-12-09 07:23:54 - Moved to In Progress
+
+2024-12-09 07:24:04 - Moved to Done

@@ -296,6 +296,6 @@ class TaskManagerTests(unittest.TestCase):
             task_manager.init_workspace()
             task_manager.create_task("Test Task", "Feature", "Test User")
             task = task_manager.move_task(1, "In Progress")
-            self.assertEqual(task.task_id, 1)
+            self.assertEqual(task._task_id, 1)
             self.assertEqual(task.title, "Test Task")
             self.assertEqual(task.board, "In Progress")

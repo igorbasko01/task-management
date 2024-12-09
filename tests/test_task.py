@@ -83,7 +83,7 @@ This is a note
     
     def test_task_from_string_valid(self):
         task = Task.from_string(self._valid_task_str)
-        self.assertEqual(task.task_id, 1)
+        self.assertEqual(task._task_id, 1)
         self.assertEqual(task.title, "Test Task")
         self.assertEqual(task.created, datetime(2021, 1, 1, 12, 0, 0))
         self.assertEqual(task._priority.name, "High")

@@ -25,6 +25,8 @@ class TaskHistory:
 
 class Task:
 
+    _prefix = "TASK-"
+
     _categories = ["Bug", "Feature", "Documentation", "Maintenance", "UI/UX", "Security"]
     
     _boards = [
@@ -34,7 +36,7 @@ class Task:
     ]
 
     _task_template = """---
-id: TASK-{task_id}
+id: {prefix}{task_id}
 title: {title}
 created: {created}
 priority: {priority}
@@ -64,7 +66,7 @@ board: {board}
                  board: str = "Backlog",
                  notes: str = "",
                  history: List[TaskHistory] = []):
-        self.task_id: int = task_id
+        self._task_id: int = task_id
         self.title: str = title
         self.created: datetime = created or datetime.now()
         self._priority: TaskPriority = priority
@@ -106,10 +108,15 @@ board: {board}
             history=history
         )
     
+    @classmethod
+    def task_id_from_string(cls, task_num: str):
+        return f"{cls._prefix}{task_num}"
+    
     def to_string(self):
         history = "\n\n".join([entry.to_string() for entry in self.history])
         return self._task_template.format(
-            task_id=self.task_id,
+            prefix=self._prefix,
+            task_id=self._task_id,
             title=self.title,
             description=self.description,
             priority=self._priority.name,
@@ -131,6 +138,10 @@ board: {board}
     @property
     def category(self):
         return self._category
+
+    @property
+    def task_id(self):
+        return f"{self._prefix}{self._task_id}"
     
     def move_to_board(self, to_board: str):
         self._board = self._validate_board(to_board)
@@ -159,4 +170,4 @@ board: {board}
         raise ValueError(f"Invalid board: {board}, allowed boards: {self._boards}")
     
     def __str__(self):
-        return f"TASK-{self.task_id}: {self.title} ({self._priority.name}, {self._category}, {self._board.name})"
+        return f"{self.task_id}: {self.title} ({self._priority.name}, {self._category}, {self._board.name})"

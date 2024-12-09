@@ -26,13 +26,13 @@ class TaskManager:
             f.truncate()
         task_id = counter + 1
         task = Task(task_id, title, "", TaskPriority(PriorityLevel.MEDIUM), category, owner)
-        task_file = self.tasks_dir / f"TASK-{task.task_id}.md"
+        task_file = self.tasks_dir / f"{task.task_id}.md"
         with task_file.open("w") as f:
             f.write(task.to_string())
-        return task_id
+        return task.task_id
 
     def move_task(self, task_id: int, board: str) -> Task:
-        task_file = self.tasks_dir / f"TASK-{task_id}.md"
+        task_file = self.tasks_dir / f"{Task.task_id_from_string(task_id)}.md"
         try:
             task_content = task_file.read_text()
         except FileNotFoundError:
@@ -44,7 +44,7 @@ class TaskManager:
         return task
 
     def update_task_priority(self, task_id: int, priority: str):
-        task_file = self.tasks_dir / f"TASK-{task_id}.md"
+        task_file = self.tasks_dir / f"{Task.task_id_from_string(task_id)}.md"
         try:
             task_content = task_file.read_text()
         except FileNotFoundError:
@@ -55,7 +55,7 @@ class TaskManager:
             f.write(task.to_string())
 
     def update_task_category(self, task_id: int, category: str):
-        task_file = self.tasks_dir / f"TASK-{task_id}.md"
+        task_file = self.tasks_dir / f"{Task.task_id_from_string(task_id)}.md"
         try:
             task_content = task_file.read_text()
         except FileNotFoundError:
