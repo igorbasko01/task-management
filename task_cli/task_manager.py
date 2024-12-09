@@ -87,3 +87,11 @@ class TaskManager:
             return task.task_id_with_title
         except FileNotFoundError:
             raise ValueError(f"Task {task_id} not found")
+        
+    def task_location(self, task_id: int):
+        task_file = self.tasks_dir / f"{Task.task_id_from_string(task_id)}.md"
+        try:
+            task = Task.from_string(task_file.read_text())
+            return task_file
+        except FileNotFoundError:
+            raise ValueError(f"Task {task_id} not found")

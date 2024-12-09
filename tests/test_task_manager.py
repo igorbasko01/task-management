@@ -323,3 +323,28 @@ class TaskManagerTests(unittest.TestCase):
             task_manager.create_task("Test Task", "Feature", "Test User")
             title = task_manager.delete_task(1)
             self.assertEqual(title, "TASK-1 - Test Task")
+
+    def test_delete_task_should_not_delete_other_tasks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            task_manager.delete_task(1)
+            task_file = task_manager.tasks_dir / "TASK-2.md"
+            self.assertTrue(task_file.exists())
+
+    def test_task_location(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            location = task_manager.task_location(1)
+            self.assertEqual(location, task_manager.tasks_dir / "TASK-1.md")
+
+    def test_task_location_should_raise_error_if_task_doesnt_exist(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            with self.assertRaises(ValueError):
+                task_manager.task_location(1)

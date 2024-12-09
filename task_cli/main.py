@@ -1,5 +1,7 @@
 import click
 
+from task_cli.task import Task
+
 from .task_manager import TaskManager
 
 
@@ -76,6 +78,16 @@ def delete(task_id):
     manager = TaskManager()
     task_title = manager.delete_task(task_id)
     click.echo(f"🗑 Deleted task {task_title}")
+
+
+@cli.command()
+@click.argument("task_id")
+@click.option("--editor", default="code", help="Editor to use")
+def edit(task_id, editor):
+    """Edit a task"""
+    manager = TaskManager()
+    task_path = manager.task_location(task_id)
+    click.edit(filename=task_path, editor=editor)
 
 
 if __name__ == "__main__":
