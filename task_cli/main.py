@@ -69,5 +69,14 @@ def list_tasks(board, priority, category):
         click.echo(task)
 
 
+@cli.command()
+@click.argument("task_id")
+def delete(task_id):
+    """Delete a task"""
+    manager = TaskManager()
+    task_title = manager.delete_task(task_id)
+    click.echo(f"🗑 Deleted task {task_title}")
+
+
 if __name__ == "__main__":
     cli()

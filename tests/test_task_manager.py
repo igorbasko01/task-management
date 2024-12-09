@@ -299,3 +299,27 @@ class TaskManagerTests(unittest.TestCase):
             self.assertEqual(task._task_id, 1)
             self.assertEqual(task.title, "Test Task")
             self.assertEqual(task.board, "In Progress")
+
+    def test_delete_task(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            task_manager.delete_task(1)
+            task_file = task_manager.tasks_dir / "TASK-1.md"
+            self.assertFalse(task_file.exists())
+
+    def test_delete_task_should_raise_error_if_task_doesnt_exist(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            with self.assertRaises(ValueError):
+                task_manager.delete_task(1)
+
+    def test_delete_task_returns_title_of_deleted_task(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task", "Feature", "Test User")
+            title = task_manager.delete_task(1)
+            self.assertEqual(title, "TASK-1 - Test Task")

@@ -143,6 +143,10 @@ board: {board}
     def task_id(self):
         return f"{self._prefix}{self._task_id}"
     
+    @property
+    def task_id_with_title(self):
+        return f"{self.task_id} - {self.title}"
+    
     def move_to_board(self, to_board: str):
         self._board = self._validate_board(to_board)
         timestamp = datetime.now()

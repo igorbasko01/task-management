@@ -78,3 +78,12 @@ class TaskManager:
                 continue
             tasks.append(task)
         return tasks
+    
+    def delete_task(self, task_id: int):
+        task_file = self.tasks_dir / f"{Task.task_id_from_string(task_id)}.md"
+        try:
+            task = Task.from_string(task_file.read_text())
+            task_file.unlink()
+            return task.task_id_with_title
+        except FileNotFoundError:
+            raise ValueError(f"Task {task_id} not found")
