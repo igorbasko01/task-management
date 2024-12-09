@@ -63,7 +63,7 @@ def update_category(task_id, category):
 @click.option("--board", default=None, help="Board name")
 @click.option("--priority", default=None, help="Priority level")
 @click.option("--category", default=None, help="Category name")
-def list_tasks(board, priority, category):
+def list(board, priority, category):
     """List tasks based on board, priority, and category"""
     manager = TaskManager()
     tasks = manager.list_tasks(board=board, priority=priority, category=category)
