@@ -4,8 +4,8 @@ title: sort listed tasks
 created: 2025-01-15 22:29:24
 priority: Medium
 category: Feature
-owner: 
-board: Backlog
+owner: None
+board: Done
 ---
 
 ## Description
@@ -16,3 +16,7 @@ It should sort by having "In Progress" tasks first, then "Backlog" and after tha
 
 ## History
 2025-01-15 22:29:24 - Created
+
+2025-01-17 14:38:51 - Moved to In Progress
+
+2025-01-17 14:58:38 - Moved to Done

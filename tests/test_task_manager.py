@@ -2,6 +2,7 @@ import tempfile
 import unittest
 
 from task_cli.task_manager import TaskManager
+from task_cli.task import Task
 
 
 class TaskManagerTests(unittest.TestCase):
@@ -348,3 +349,15 @@ class TaskManagerTests(unittest.TestCase):
             task_manager.init_workspace()
             with self.assertRaises(ValueError):
                 task_manager.task_location(1)
+
+    def test_list_tasks_default_return_sorted_by_board_in_progress_last(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            task_manager = TaskManager(tmp)
+            task_manager.init_workspace()
+            task_manager.create_task("Test Task 1", "Feature", "Test User")
+            task_manager.create_task("Test Task 2", "Feature", "Test User")
+            task_manager.move_task(1, Task.IN_PROGRESS.name)
+            task_manager.move_task(2, Task.DONE.name)
+            tasks = task_manager.list_tasks()
+            self.assertEqual(tasks[0].title, "Test Task 2")
+            self.assertEqual(tasks[1].title, "Test Task 1")

@@ -28,11 +28,15 @@ class Task:
     _prefix = "TASK-"
 
     _categories = ["Bug", "Feature", "Documentation", "Maintenance", "UI/UX", "Security"]
+
+    BACK_LOG = Board("Backlog", "BL")
+    IN_PROGRESS = Board("In Progress", "IP")
+    DONE = Board("Done", "DN")
     
     _boards = [
-        Board("Backlog", "BL"), 
-        Board("In Progress", "IP"), 
-        Board("Done", "DN")
+        BACK_LOG, 
+        IN_PROGRESS, 
+        DONE
     ]
 
     _task_template = """---

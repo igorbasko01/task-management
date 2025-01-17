@@ -30,5 +30,8 @@ class Board:
 
         return self.name.lower() == other_name.lower() or self.acronym.lower() == other_acronym.lower()
     
+    def __hash__(self):
+        return hash(self.name)
+    
     def __str__(self):
         return f"{self.name} ({self.acronym})"

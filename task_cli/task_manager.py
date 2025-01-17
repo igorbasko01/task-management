@@ -77,7 +77,17 @@ class TaskManager:
             if priority and task._priority.name != priority:
                 continue
             tasks.append(task)
-        return tasks
+        return self._sort_tasks(tasks)
+    
+    def _sort_tasks(self, tasks):
+        board_sorting_order = {
+            Task.IN_PROGRESS: 0,
+            Task.BACK_LOG: 1,
+            Task.DONE: 2,
+        }
+        sorted_tasks = sorted(tasks, key=lambda task: board_sorting_order[task.board]*-1)
+        return sorted_tasks
+
     
     def delete_task(self, task_id: int):
         task_file = self.tasks_dir / f"{Task.task_id_from_string(task_id)}.md"
