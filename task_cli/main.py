@@ -6,6 +6,7 @@ from .task_manager import TaskManager
 
 
 @click.group()
+@click.version_option()
 def cli():
     """Task management system"""
     pass

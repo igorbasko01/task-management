@@ -1,8 +1,12 @@
 from setuptools import setup, find_packages
 
+version = {}
+with open('task_cli/version.py') as f:
+    exec(f.read(), version)
+
 setup(
     name='task-cli',
-    version='0.1.0',
+    version=version['__version__'],
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
